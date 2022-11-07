@@ -30,10 +30,10 @@ function decodeHeader(req) {
 
 function getToken(authorization) {
     if (!authorization) {
-        throw new Error('No viene token');
+        throw error('No viene token', 401);
     }
     if (authorization.indexOf('Bearer ') === -1) {
-        throw new Error('Formato invalido');
+        throw error('Formato invalido', 401);
     }
     let token = authorization.replace('Bearer ', '');
     return token;
@@ -43,7 +43,7 @@ function verify(token) {
     try {
         return jwt.verify(token, secret);
     } catch (error) {
-        throw new Error('Token invalido');
+        throw error('Token invalido', 401);
     }
 }
 

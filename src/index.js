@@ -13,6 +13,7 @@ const errors = require('../network/errors');
 const app = express();
 const swaggerDoc = require('./swagger.json');
 
+const port = config.api.port;
 app.use(bodyParser.json());
 
 // Routes
@@ -23,6 +24,6 @@ app.use('/api/auth', auth);
 // Error handler
 app.use(errors);
 
-app.listen(config.api.port, () => {
-    console.log('API escuchando en el puerto http://localhost:' + config.api.port + '/api-docs');
-});
+app.listen(port, () =>
+    console.log(`${config.api.name} listening on port ${config.api.url}`)
+);

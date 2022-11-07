@@ -5,7 +5,12 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "migrate:generate": "sequelize-cli migration:generate --name",
+    "migrate:run": "sequelize-cli db:migrate",
+    "migrate:revert": "sequelize-cli db:migrate:undo",
+    "migrate:delete": "sequelize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "Nahuel Zalazar Villca",
@@ -18,6 +23,10 @@
     "jsonwebtoken": "^8.5.1",
     "nanoid": "^2.1.7",
     "nodemon": "^2.0.20",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.25.4",
+    "sequelize-cli": "^6.5.2",
     "swagger-ui-express": "^4.5.0"
   }
 }

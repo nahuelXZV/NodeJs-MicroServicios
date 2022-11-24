@@ -13,7 +13,7 @@ router.post('/login', login);
 
 // functions
 function login(req, res, next) {
-    Controller.login(req.body.username, req.body.password).then(
+    Controller.login(req.body.email, req.body.password).then(
         (token) => { response.success(req, res, token, 200); }
     ).catch(next);
 }

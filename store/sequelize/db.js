@@ -3,6 +3,7 @@ const getModel = require('./handlerModel');
 const error = require('../../utils/error');
 
 async function list(table) {
+    console.log('list', table);
     const model = getModel(table);
     return await model.findAll();
 }
@@ -42,10 +43,18 @@ async function remove(tabla, id) {
     return true;
 }
 
+async function query(tabla, q) {
+    const model = getModel(tabla);
+    return await model.findAll({
+        where: q,
+    });
+}
+
 module.exports = {
     list,
     get,
     update,
     insert,
     remove,
+    query,
 }

@@ -6,7 +6,7 @@ const auth = require('../auth');
 
 const TABLA = 'user';
 
-module.exports = function (store = require('../../../store/micro')) {
+module.exports = function (store = require('../../../store/sequelize/db')) {
 
     function list() {
         return store.list(TABLA);
@@ -16,28 +16,36 @@ module.exports = function (store = require('../../../store/micro')) {
         return store.get(TABLA, id);
     }
 
-    async function upsert(body) {
+    async function create(body) {
         const user = {
-            id: nanoid(),
             name: body.name,
-            username: body.username,
+            createdAt: new Date(),
         };
+        const newUser = await store.insert(TABLA, user);
+        auth.create({
+            email: body.email,
+            password: body.password,
+            userId: newUser.id,
+        })
+        return newUser;
+    }
 
-        if (body.password || body.username) {
-            await auth.upsert(TABLA, {
-                id: user.id,
-                username: user.username,
-                password: body.password,
-            });
-        }
+    async function update(body, id) {
+        const user = {
+            name: body.name,
+        };
+        return store.update(TABLA, id, user);
+    }
 
-
-        return store.upsert(TABLA, user);
+    async function destroy(id) {
+        return store.remove(TABLA, id);
     }
 
     return {
         list,
         get,
-        upsert,
+        create,
+        update,
+        destroy,
     };
 }

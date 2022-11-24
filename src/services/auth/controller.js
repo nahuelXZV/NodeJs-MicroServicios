@@ -6,7 +6,7 @@ const auth = require('../../../auth');
 
 const TABLA = 'auth';
 
-module.exports = function (store = require('../../../store/micro')) {
+module.exports = function (store = require('../../../store/sequelize/db')) {
 
     async function upsert(body) {
         const auth = {
@@ -17,13 +17,39 @@ module.exports = function (store = require('../../../store/micro')) {
         return store.upsert(TABLA, auth);
     }
 
+    async function create(body) {
+        const auth = {
+            email: body.email,
+            password: await bcrypt.hash(body.password, 7),
+            userId: body.userId,
+            createdAt: new Date(),
+        }
+        return store.insert(TABLA, auth);
+    }
+
+    async function update(body) {
+        const auth = {
+            email: body.email,
+        }
+        return store.update(TABLA, auth);
+    }
+
     async function login(username, password) {
-        // bcrytp.compare(password, hash).then(res => console.log(res));
-        return { token: auth.sing({ username, password }) };
+        const hash = await store.query(TABLA, { email: username });
+        return bcrypt.compare(password, hash[0].password).then(res => {
+            if (res === true) {
+                console.log('true');
+                return { token: auth.sing({ username, password }) }
+            } else {
+                throw new Error('Informacion invalida');
+            }
+        });
     }
 
     return {
-        upsert,
         login,
+        upsert,
+        create,
+        update,
     };
 }

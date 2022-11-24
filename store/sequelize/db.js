@@ -23,13 +23,17 @@ async function update(tabla, id, data) {
     if (!result) {
         throw error(`${model} not found`, 404)
     }
-    result.update(data);
+    result.update(data).catch(err => {
+        throw error(err.message, 500);
+    });
     return result;
 }
 
 async function insert(tabla, data) {
     const model = getModel(tabla);
-    return await model.create(data);
+    return await model.create(data).catch(err => {
+        throw error(err.message, 500);
+    });
 }
 
 

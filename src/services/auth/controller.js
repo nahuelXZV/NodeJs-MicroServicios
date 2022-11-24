@@ -38,7 +38,6 @@ module.exports = function (store = require('../../../store/sequelize/db')) {
         const hash = await store.query(TABLA, { email: username });
         return bcrypt.compare(password, hash[0].password).then(res => {
             if (res === true) {
-                console.log('true');
                 return { token: auth.sing({ username, password }) }
             } else {
                 throw new Error('Informacion invalida');
